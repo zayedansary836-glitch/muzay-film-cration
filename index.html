@@ -6,97 +6,49 @@
   <title>Muzaya Film Creation</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff7e00, #ffae42);
-      height: 100vh;
+      background: linear-gradient(135deg, #ff7a00, #ffae42);
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      color: white;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
     }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 20px;
+    .card {
+      background: #fff6eb;
+      padding: 40px;
+      border-radius: 20px;
       text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-
+    h1 {
+      color: #333;
+    }
     button {
-      background-color: #fff;
-      color: #ff7e00;
+      background-color: #ff7a00;
       border: none;
-      padding: 12px 28px;
-      font-size: 1rem;
-      font-weight: bold;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
-
     button:hover {
-      background-color: #ff7e00;
-      color: white;
-      transform: scale(1.05);
-    }
-
-    .card {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      padding: 40px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .user-info {
-      margin-top: 20px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-info img {
-      border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      border: 3px solid white;
-    }
-
-    .logout-btn {
-      margin-top: 15px;
-      background: #fff;
-      color: #d62828;
-    }
-
-    .logout-btn:hover {
-      background: #d62828;
-      color: white;
+      background-color: #ff9900;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Welcome to <br><strong>Muzaya Film Creation</strong></h1>
+    <h1>Welcome to Muzaya Film Creation</h1>
     <button id="loginBtn">Login with Google</button>
-
-    <div class="user-info" id="userInfo">
-      <img id="userPhoto" src="" alt="User Photo" />
-      <p id="userName"></p>
-      <p id="userEmail"></p>
-      <button class="logout-btn" id="logoutBtn">Logout</button>
-    </div>
   </div>
 
   <script type="module">
-    // Firebase SDK Imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 
-    // Your Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
       authDomain: "muzaya-film-creation.firebaseapp.com",
@@ -107,41 +59,20 @@
       measurementId: "G-02EG3SHXKC"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const loginBtn = document.getElementById("loginBtn");
-    const userInfo = document.getElementById("userInfo");
-    const userName = document.getElementById("userName");
-    const userEmail = document.getElementById("userEmail");
-    const userPhoto = document.getElementById("userPhoto");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    // Login
-    loginBtn.addEventListener("click", async () => {
+    document.getElementById("loginBtn").addEventListener("click", async () => {
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-
-        userName.textContent = user.displayName;
-        userEmail.textContent = user.email;
-        userPhoto.src = user.photoURL;
-
-        loginBtn.style.display = "none";
-        userInfo.style.display = "flex";
+        alert(`Welcome ${user.displayName}!`);
+        window.location.href = "dashboard.html";
       } catch (error) {
-        alert("Login failed: " + error.message);
         console.error(error);
+        alert("Login failed: " + error.message);
       }
-    });
-
-    // Logout
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      loginBtn.style.display = "inline-block";
-      userInfo.style.display = "none";
     });
   </script>
 </body>
