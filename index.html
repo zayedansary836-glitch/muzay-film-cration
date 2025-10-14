@@ -1,91 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Muzaya Film Creation — Gallery & Upload</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muzaya Film Creation</title>
   <style>
-    :root{--bg:#0b0b0f;--card:#121214;--muted:#b8b8b8;--accent:#d99b3e}
-    body{margin:0;font-family:Poppins,system-ui,Arial;background:var(--bg);color:#fff}
-    header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(0,0,0,0.5);position:sticky;top:0;z-index:50}
-    .brand{font-weight:700;color:var(--accent)}
-    nav{display:flex;gap:10px;align-items:center}
-    button{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:#071013;font-weight:700;cursor:pointer}
-    main{max-width:980px;margin:28px auto;padding:0 16px}
-    .hero{background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?auto=format&fit=crop&w=1600&q=60') center/cover no-repeat;border-radius:12px;padding:48px;text-align:center}
-    .hero h1{color:var(--accent);font-size:32px;margin:0}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:20px}
-    .card{background:var(--card);padding:12px;border-radius:10px}
-    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-    .upload-area{display:flex;gap:10px;flex-direction:column}
-    .input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #2a2a2a;background:#0f0f11;color:#fff}
-    footer{text-align:center;padding:20px;color:var(--muted);font-size:13px;margin-top:40px}
-    .floating{position:fixed;right:18px;bottom:18px;background:var(--accent);width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#071013;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
-    .small{font-size:13px;color:var(--muted)}
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff7e00, #ffae42);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    button {
+      background-color: #fff;
+      color: #ff7e00;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff7e00;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-info {
+      margin-top: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-info img {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      border: 3px solid white;
+    }
+
+    .logout-btn {
+      margin-top: 15px;
+      background: #fff;
+      color: #d62828;
+    }
+
+    .logout-btn:hover {
+      background: #d62828;
+      color: white;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">Muzaya Film Creation</div>
-    <nav>
-      <div id="userArea" class="small">Not signed in</div>
-      <button id="btnLogin">Login</button>
-      <button id="btnLogout" style="display:none;background:#333;color:#fff">Logout</button>
-    </nav>
-  </header>
+  <div class="card">
+    <h1>Welcome to <br><strong>Muzaya Film Creation</strong></h1>
+    <button id="loginBtn">Login with Google</button>
 
-  <main>
-    <section class="hero" aria-label="hero">
-      <h1>Capture. Create. Share.</h1>
-      <p class="small">Upload your photos & videos (pending approval). Clients browse approved work here.</p>
-    </section>
+    <div class="user-info" id="userInfo">
+      <img id="userPhoto" src="" alt="User Photo" />
+      <p id="userName"></p>
+      <p id="userEmail"></p>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </div>
 
-    <section style="margin-top:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 style="margin:0">Gallery</h2>
-        <div class="small">Only approved items are public</div>
-      </div>
-
-      <div id="gallery" class="grid" style="margin-top:12px"></div>
-    </section>
-
-    <section style="margin-top:26px">
-      <h2>Upload (for signed-in users)</h2>
-      <div class="card">
-        <div class="upload-area">
-          <input id="title" class="input" placeholder="Title (eg. Wedding highlight)">
-          <textarea id="desc" class="input" rows="2" placeholder="Short description"></textarea>
-
-          <!-- Option 1: Cloudinary direct upload (if configured) -->
-          <div>
-            <label class="small">Upload from device (Cloudinary optional)</label><br>
-            <input type="file" id="fileInput">
-            <div class="small" id="cloudInfo">If Cloudinary configured, file will upload directly. Otherwise paste image URL below.</div>
-          </div>
-
-          <!-- Fallback: paste an image URL -->
-          <input id="imageUrl" class="input" placeholder="Or paste image / video URL here (https://...)">
-
-          <button id="btnUpload">Submit Upload (will be pending)</button>
-          <div id="uploadStatus" class="small"></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div class="floating" id="helpBtn">AI</div>
-
-  <footer>
-    © 2025 Muzaya Film Creation — Built with ❤️
-  </footer>
-
-  <!-- Firebase + app script -->
   <script type="module">
-    // ---------- CONFIG: paste your Firebase config here ----------
+    // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
+    // Your Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
       authDomain: "muzaya-film-creation.firebaseapp.com",
@@ -96,153 +107,42 @@
       measurementId: "G-02EG3SHXKC"
     };
 
-    // ---------- OPTIONAL: Cloudinary settings ----------
-    // If you want direct device uploads without card, create a Cloudinary free account
-    // and make an unsigned upload preset. Then set CLOUDINARY_CLOUD and CLOUDINARY_PRESET.
-    // If left empty, users should paste an image URL in the "Or paste image / video URL" field.
-    const CLOUDINARY_CLOUD = "";        // example: "demo"
-    const CLOUDINARY_PRESET = "";       // example: "unsigned_preset_name"
-
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // UI elements
-    const btnLogin = document.getElementById('btnLogin');
-    const btnLogout = document.getElementById('btnLogout');
-    const userArea = document.getElementById('userArea');
-    const galleryEl = document.getElementById('gallery');
-    const fileInput = document.getElementById('fileInput');
-    const imageUrl = document.getElementById('imageUrl');
-    const btnUpload = document.getElementById('btnUpload');
-    const uploadStatus = document.getElementById('uploadStatus');
-    const titleInput = document.getElementById('title');
-    const descInput = document.getElementById('desc');
-
-    // Google login
     const provider = new GoogleAuthProvider();
 
-    btnLogin.addEventListener('click', async ()=>{
-      try{
-        await signInWithPopup(auth, provider);
-      }catch(e){ alert("Login failed: " + e.message); }
-    });
-    btnLogout.addEventListener('click', async ()=> { await signOut(auth); });
+    const loginBtn = document.getElementById("loginBtn");
+    const userInfo = document.getElementById("userInfo");
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const userPhoto = document.getElementById("userPhoto");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    // Auth state
-    let currentUser = null;
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if(user){
-        userArea.innerHTML = `${user.displayName || user.email}`;
-        btnLogin.style.display = 'none';
-        btnLogout.style.display = 'inline-block';
-      } else {
-        userArea.innerHTML = 'Not signed in';
-        btnLogin.style.display = 'inline-block';
-        btnLogout.style.display = 'none';
+    // Login
+    loginBtn.addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        userName.textContent = user.displayName;
+        userEmail.textContent = user.email;
+        userPhoto.src = user.photoURL;
+
+        loginBtn.style.display = "none";
+        userInfo.style.display = "flex";
+      } catch (error) {
+        alert("Login failed: " + error.message);
+        console.error(error);
       }
     });
 
-    // Fetch gallery: only show status == "approved"
-    async function loadGallery(){
-      galleryEl.innerHTML = 'Loading...';
-      try{
-        const q = query(collection(db, 'uploads'), where('status','==','approved'), orderBy('createdAt','desc'));
-        const snap = await getDocs(q);
-        galleryEl.innerHTML = '';
-        if(snap.empty){ galleryEl.innerHTML = '<div class="small">No approved items yet.</div>'; return; }
-        snap.forEach(doc => {
-          const d = doc.data();
-          const el = document.createElement('div');
-          el.className = 'card';
-          el.innerHTML = `
-            <img src="${d.url}" alt="${escapeHtml(d.title||'Untitled')}">
-            <div style="margin-top:8px"><strong>${escapeHtml(d.title||'Untitled')}</strong></div>
-            <div class="small">${escapeHtml(d.description||'')}</div>
-            <div class="small" style="margin-top:6px;color:#aaa">by ${escapeHtml(d.displayName||d.email||'Anonymous')}</div>
-          `;
-          galleryEl.appendChild(el);
-        });
-      }catch(e){
-        galleryEl.innerHTML = '<div class="small">Failed to load gallery: '+e.message+'</div>';
-      }
-    }
-
-    // Safe escape
-    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
-
-    // Upload handler
-    btnUpload.addEventListener('click', async ()=>{
-      uploadStatus.textContent = '';
-      if(!currentUser) return alert('Please login to upload.');
-      const title = titleInput.value.trim();
-      const desc = descInput.value.trim();
-
-      // If cloudinary configured and a file selected => upload to cloudinary first
-      if(CLOUDINARY_CLOUD && CLOUDINARY_PRESET && fileInput.files.length){
-        uploadStatus.textContent = 'Uploading to Cloudinary…';
-        try{
-          const url = await uploadToCloudinary(fileInput.files[0]);
-          await saveUploadDoc(url, title, desc);
-          uploadStatus.textContent = 'Uploaded & pending approval.';
-          titleInput.value=''; descInput.value=''; imageUrl.value=''; fileInput.value='';
-          loadGallery();
-        }catch(e){ uploadStatus.textContent = 'Upload failed: '+e.message; }
-        return;
-      }
-
-      // Otherwise check imageUrl field
-      const url = imageUrl.value.trim();
-      if(!url){
-        return alert('Please pick a file or paste an image/video URL.');
-      }
-      uploadStatus.textContent = 'Saving upload…';
-      try{
-        await saveUploadDoc(url, title, desc);
-        uploadStatus.textContent = 'Saved & pending approval.';
-        titleInput.value=''; descInput.value=''; imageUrl.value='';
-        loadGallery();
-      }catch(e){ uploadStatus.textContent = 'Failed: '+e.message; }
+    // Logout
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      loginBtn.style.display = "inline-block";
+      userInfo.style.display = "none";
     });
-
-    // Save doc to Firestore
-    async function saveUploadDoc(url, title, desc){
-      const doc = {
-        userId: currentUser.uid,
-        displayName: currentUser.displayName || null,
-        email: currentUser.email || null,
-        url,
-        title: title || '',
-        description: desc || '',
-        status: 'pending',
-        createdAt: serverTimestamp()
-      };
-      await addDoc(collection(db,'uploads'), doc);
-    }
-
-    // Cloudinary unsigned upload
-    async function uploadToCloudinary(file){
-      // unsigned upload endpoint
-      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/upload`;
-      const fd = new FormData();
-      fd.append('file', file);
-      fd.append('upload_preset', CLOUDINARY_PRESET);
-      const res = await fetch(url, { method:'POST', body: fd });
-      if(!res.ok) throw new Error('Cloudinary upload failed');
-      const data = await res.json();
-      return data.secure_url;
-    }
-
-    // Initial load
-    loadGallery();
-
-    // Simple help/AI button (placeholder)
-    document.getElementById('helpBtn').addEventListener('click', ()=>{
-      alert('Muzaya AI coming soon — for now use Contact to ask about photography, packages and bookings.');
-    });
-
   </script>
 </body>
 </html>
