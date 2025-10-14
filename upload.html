@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload | Muzaya Film Creation</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background: #ff7a00;
+      width: 100%;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    header button {
+      background: white;
+      color: #ff7a00;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    main {
+      margin-top: 40px;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #ff7a00;
+      margin-bottom: 20px;
+    }
+
+    .upload-area {
+      border: 2px dashed #ff7a00;
+      padding: 40px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .upload-area:hover {
+      background: #fff7f0;
+    }
+
+    .preview {
+      margin-top: 20px;
+    }
+
+    img, video {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: #ff7a00;
+      transition: width 0.3s ease;
+    }
+
+    #downloadLink {
+      margin-top: 20px;
+      display: none;
+      color: #ff7a00;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      display: inline-block;
+      color: #ff7a00;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Muzaya Film Creation</h1>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <main>
+    <h2>Upload Photo / Video</h2>
+    <div class="upload-area" id="uploadArea">
+      <p>Click to select a file or drag & drop here</p>
+      <input type="file" id="fileInput" accept="image/*,video/*" hidden />
+    </div>
+
+    <div class="preview" id="preview"></div>
+
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <a id="downloadLink" target="_blank">View Uploaded File</a>
+
+    <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
+      authDomain: "muzaya-film-creation.firebaseapp.com",
+      projectId: "muzaya-film-creation",
+      storageBucket: "muzaya-film-creation.firebasestorage.app",
+      messagingSenderId: "466440504989",
+      appId: "1:466440504989:web:ee937abfd4dae2f1ae3674"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const fileInput = document.getElementById("fileInput");
+    const uploadArea = document.getElementById("uploadArea");
+    const preview = document.getElementById("preview");
+    const progress = document.getElementById("progress");
+    const downloadLink = document.getElementById("downloadLink");
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+
+    // Only allow logged in users
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    uploadArea.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      preview.innerHTML = "";
+
+      if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        preview.appendChild(img);
+      } else if (file.type.startsWith("video/")) {
+        const video = document.createElement("video");
+        video.src = URL.createObjectURL(file);
+        video.controls = true;
+        preview.appendChild(video);
+      }
+
+      uploadFile(file);
+    });
+
+    function uploadFile(file) {
+      const fileRef = ref(storage, "uploads/" + Date.now() + "_" + file.name);
+      const uploadTask = uploadBytesResumable(fileRef, file);
+
+      uploadTask.on("state_changed", (snapshot) => {
+        const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        progress.style.width = progressPercent + "%";
+      }, (error) => {
+        alert("Upload failed: " + error.message);
+      }, async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        downloadLink.href = downloadURL;
+        downloadLink.style.display = "block";
+        downloadLink.textContent = "✅ View Uploaded File";
+        alert("File uploaded successfully!");
+      });
+    }
+  </script>
+</body>
+</html>
