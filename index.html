@@ -1,46 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MFC - Muzaya Film Creation</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MFC Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff7a00, #ffb347);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-box {
+      background: #fff;
+      width: 380px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    h2 {
+      color: #ff7a00;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #ff7a00;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff7a00;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e66b00;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #ff7a00;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 10px;
+      color: #ff7a00;
+    }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MFC</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="#services">Services</a>
-      <a href="#about">About</a>
-      <a href="dashboard.html" class="btn">Login / Join</a>
-    </nav>
-  </header>
+  <div class="auth-box">
+    <h2 id="formTitle">Login to MFC</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="authBtn">Login</button>
+    <div class="loading" id="loading">Loading...</div>
+    <div class="error" id="errorMsg"></div>
+    <p id="toggleText">Don’t have an account? <a id="toggleForm">Register</a></p>
+  </div>
 
-  <section class="hero">
-    <h1>Unleash your <span>Creativity</span></h1>
-    <p>Share your talent, videos & stories with the world — powered by Muzaya Film Creation.</p>
-    <div class="search-bar">
-      <input type="text" placeholder='Try "wedding short film"' />
-      <button>🔍</button>
-    </div>
-  </section>
+  <script type="module">
+    import { auth } from "./firebase.js";
+    import {
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-  <section id="services" class="categories">
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/906/906343.png"><p>Video Editing</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"><p>Photography</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png"><p>Script Writing</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png"><p>Voice Over</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2584/2584640.png"><p>Animation</p></div>
-  </section>
+    const formTitle = document.getElementById("formTitle");
+    const authBtn = document.getElementById("authBtn");
+    const toggleForm = document.getElementById("toggleForm");
+    const toggleText = document.getElementById("toggleText");
+    const errorMsg = document.getElementById("errorMsg");
+    const loading = document.getElementById("loading");
 
-  <section id="about" class="about">
-    <h2>About Muzaya Film Creation</h2>
-    <p>MFC is your one-stop platform for filmmakers, editors, and artists to collaborate, upload, and explore creative work.</p>
-  </section>
+    let isLogin = true;
 
-  <footer class="footer">
-    <p>© 2025 Muzaya Film Creation | Designed with ❤️ in Orange</p>
-  </footer>
+    // Toggle between login and register
+    toggleForm.addEventListener("click", () => {
+      isLogin = !isLogin;
+      formTitle.innerText = isLogin ? "Login to MFC" : "Create Your MFC Account";
+      authBtn.innerText = isLogin ? "Login" : "Register";
+      toggleText.innerHTML = isLogin
+        ? `Don’t have an account? <a id="toggleForm">Register</a>`
+        : `Already have an account? <a id="toggleForm">Login</a>`;
+    });
+
+    // Auth function
+    authBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      errorMsg.textContent = "";
+      loading.style.display = "block";
+
+      try {
+        if (isLogin) {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+      } catch (error) {
+        loading.style.display = "none";
+        errorMsg.textContent = error.message.includes("auth/invalid-email")
+          ? "Invalid email format."
+          : error.message.includes("auth/wrong-password")
+          ? "Wrong password."
+          : error.message.includes("auth/user-not-found")
+          ? "No user found with this email."
+          : error.message.includes("auth/email-already-in-use")
+          ? "Email already registered."
+          : error.message;
+      }
+    });
+
+    // Redirect to dashboard after login
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "dashboard.html";
+      }
+    });
+  </script>
 </body>
 </html>
