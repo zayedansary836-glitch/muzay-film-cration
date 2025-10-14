@@ -1,235 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MFC — Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MFC Login | Muzaya Film Creation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root{
-      --orange-600:#ff8a00;
-      --orange-700:#ff7a00;
-      --bg1:#ffb86b;
-      --card:#fff;
-      --muted:#666;
-      --maxW:980px;
-      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      background: radial-gradient(1200px 600px at 10% 10%, #ffd59a 0%, rgba(255,138,0,0.12) 22%, rgba(255,122,0,0.06) 50%), linear-gradient(180deg,#ffefdc 0%, #fff5eb 100%);
-    }
-    .wrap{
-      width:92%;
-      max-width:760px;
-      margin:24px;
-      display:flex;
-      gap:30px;
-      align-items:stretch;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      border-radius:18px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,138,0,0.06), rgba(255,122,0,0.04));
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #ffb347, #ff7a00);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    .left {
-      flex:1;
-      background: linear-gradient(180deg, var(--orange-600), var(--orange-700));
+    .hero {
+      background: #ff7a00;
       color: #fff;
-      padding:36px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:16px;
-    }
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:14px;
-      font-weight:800;
-      font-size:20px;
-    }
-    .brand .logo {
-      width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px;
-    }
-    .left h1{margin:0;font-size:30px;line-height:1.05}
-    .lead{opacity:0.95;color:rgba(255,255,255,0.95);font-weight:500}
-
-    .right {
-      width:460px;
-      background:var(--card);
-      padding:28px;
-      border-radius:0 18px 18px 0;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      justify-content:center;
-    }
-    h2 {margin:0 0 6px 0;color: #ff7a00;font-size:24px}
-    .muted {color:var(--muted); margin-bottom:6px}
-
-    .form-row {display:flex;flex-direction:column;gap:10px;margin-top:6px}
-    label{font-size:13px;color:#444}
-    input{
-      padding:12px 14px;border-radius:10px;border:1px solid #eee;background:#fafafa;outline:none;
-      transition:box-shadow .18s, border-color .18s;
-    }
-    input:focus{box-shadow:0 6px 18px rgba(0,0,0,0.06);border-color: #ffd0ae;}
-    .btn{
-      display:inline-block;padding:12px 14px;border-radius:10px;border:none;background:var(--orange-700);color:#fff;font-weight:700;cursor:pointer;width:100%;
-      box-shadow: 0 6px 18px rgba(255,122,0,0.14);
-    }
-    .btn.google{background:#fff;color:#111;border:1px solid #eee;display:flex;align-items:center;justify-content:center;gap:10px}
-    .row {display:flex;gap:10px}
-    .small {font-size:13px;color:#666}
-    .link {color:var(--orange-700);cursor:pointer;font-weight:600}
-    .card {background:#fff;border-radius:12px;padding:16px;box-shadow: 0 6px 18px rgba(0,0,0,0.04)}
-    .error {color:#d33;margin-top:6px;font-weight:600}
-    .success {color:green;margin-top:6px;font-weight:600}
-    .foot {text-align:center;margin-top:10px;font-size:13px;color:#777}
-
-    /* responsive */
-    @media (max-width:880px){
-      .wrap{flex-direction:column;padding:8px}
-      .right{width:100%;border-radius:12px;padding:20px}
-      .left{border-radius:12px;padding:20px}
+      padding: 30px;
+      text-align: center;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     }
 
-    /* small animation */
-    .fade-in{animation:fadeIn .45s ease both}
-    @keyframes fadeIn {from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none}}
+    .hero h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+
+    .hero button {
+      background: #fff;
+      color: #ff7a00;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .auth-box {
+      background: #fff;
+      margin-top: 25px;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .auth-box h2 {
+      color: #ff7a00;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff7a00;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e66b00;
+    }
+
+    .google-btn {
+      background: #fff;
+      color: #444;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #ff7a00;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap fade-in">
-    <div class="left">
-      <div class="brand">
-        <div class="logo">MFC</div>
-        <div>
-          <div style="font-size:14px;opacity:0.95">Muzaya Film Creation</div>
-          <div style="font-size:12px;opacity:0.9">Cinematic films & photography</div>
-        </div>
-      </div>
+  <div class="hero">
+    <h1>Muzaya Film Creation</h1>
+    <p>Share your work, discover creators, or get hired — simple, fast, and beautiful.</p>
+    <button onclick="window.location.href='register.html'">Create an account and start uploading</button>
+  </div>
 
-      <h1>We craft cinematic wedding films & timeless photos</h1>
-      <p class="lead">Share your work, discover creators, or get hired — simple, fast, and beautiful.</p>
-
-      <div style="margin-top:12px" class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:700">New here?</div>
-          <div class="small">Create an account and start uploading</div>
-        </div>
-      </div>
+  <div class="auth-box">
+    <h2>Login to MFC</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <button class="google-btn" id="googleLoginBtn">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" /> Sign in with Google
+    </button>
+    <div class="links">
+      <p>Don't have an account? <a href="register.html">Register</a></p>
+      <p><a href="#" id="forgotPass">Forgot?</a></p>
     </div>
-
-    <div class="right card">
-      <h2 id="formTitle">Login to MFC</h2>
-      <div class="muted">Use email & password, or sign in with Google</div>
-
-      <div class="form-row">
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="you@domain.com" />
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="••••••••" />
-      </div>
-
-      <div style="display:flex;gap:10px;margin-top:6px">
-        <button class="btn" id="authBtn">Login</button>
-        <button class="btn google" id="googleBtn">
-          <img src="https://www.svgrepo.com/show/355037/google.svg" alt="g" style="width:18px;height:18px" /> Sign in with Google
-        </button>
-      </div>
-
-      <div id="msg" class="error" role="status" aria-live="polite"></div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-        <div class="small">Don't have an account? <span id="toggle" class="link">Register</span></div>
-        <div><a href="#" id="forgot" class="small link">Forgot?</a></div>
-      </div>
-
-      <div class="foot">By using MFC you agree to our <span class="link">terms</span> & <span class="link">privacy</span>.</div>
-    </div>
+    <div class="error" id="errorMsg"></div>
   </div>
 
   <script type="module">
-    // IMPORT firebase-config (must be created as firebase-config.js in repo)
-    import { auth, provider } from "./firebase-config.js";
+    import { auth } from "./firebase.js";
     import {
       signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
+      sendPasswordResetEmail,
+      GoogleAuthProvider,
       signInWithPopup
     } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-    const emailEl = document.getElementById('email');
-    const passEl = document.getElementById('password');
-    const authBtn = document.getElementById('authBtn');
-    const googleBtn = document.getElementById('googleBtn');
-    const msg = document.getElementById('msg');
-    const toggle = document.getElementById('toggle');
-    const formTitle = document.getElementById('formTitle');
+    const loginBtn = document.getElementById("loginBtn");
+    const googleBtn = document.getElementById("googleLoginBtn");
+    const errorMsg = document.getElementById("errorMsg");
+    const forgotPass = document.getElementById("forgotPass");
 
-    let isLogin = true;
-
-    function showError(text){ msg.className='error'; msg.textContent = text; }
-    function showSuccess(text){ msg.className='success'; msg.textContent = text; }
-
-    toggle.addEventListener('click', () => {
-      isLogin = !isLogin;
-      formTitle.textContent = isLogin ? 'Login to MFC' : 'Create MFC account';
-      authBtn.textContent = isLogin ? 'Login' : 'Register';
-      toggle.textContent = isLogin ? 'Register' : 'Login';
-      msg.textContent = '';
-    });
-
-    authBtn.addEventListener('click', async () => {
-      msg.textContent = '';
-      const email = emailEl.value.trim();
-      const pass = passEl.value.trim();
-      if(!email || !pass){ showError('Please provide email and password'); return; }
-
-      authBtn.disabled = true;
+    // Email login
+    loginBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
       try {
-        if(isLogin){
-          await signInWithEmailAndPassword(auth, email, pass);
-          showSuccess('Login successful — redirecting...');
-        } else {
-          await createUserWithEmailAndPassword(auth, email, pass);
-          showSuccess('Account created — redirecting...');
-        }
-      } catch (e) {
-        // Friendly messages
-        const code = e.code || '';
-        if(code.includes('invalid-email')) showError('Invalid email format.');
-        else if(code.includes('wrong-password')) showError('Wrong password. Try again.');
-        else if(code.includes('user-not-found')) showError('No account with this email.');
-        else if(code.includes('email-already-in-use')) showError('Email already registered.');
-        else if(code.includes('weak-password')) showError('Password should be at least 6 characters.');
-        else showError(e.message || 'Authentication failed');
-      } finally { authBtn.disabled = false; }
-    });
-
-    googleBtn.addEventListener('click', async () => {
-      msg.textContent = '';
-      try {
-        await signInWithPopup(auth, provider);
-        showSuccess('Google login successful — redirecting...');
-      } catch (e) {
-        showError(e.message || 'Google sign-in failed');
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errorMsg.textContent = "Error: " + err.message;
       }
     });
 
-    // Redirect logged-in users to dashboard
-    onAuthStateChanged(auth, (user) => {
-      if(user){
-        // optional: save user in localStorage
-        const safe = { uid:user.uid, email:user.email, name:user.displayName||'' };
-        localStorage.setItem('mfc_user', JSON.stringify(safe));
-        setTimeout(()=> window.location.href = 'dashboard.html', 700);
+    // Google login
+    googleBtn.addEventListener("click", async () => {
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errorMsg.textContent = "Error: " + err.message;
+      }
+    });
+
+    // Forgot password
+    forgotPass.addEventListener("click", async () => {
+      const email = prompt("Enter your registered email:");
+      if (!email) return;
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Password reset email sent. Please check your inbox!");
+      } catch (err) {
+        alert("Error: " + err.message);
       }
     });
   </script>
