@@ -21,3 +21,14 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export { app, auth, provider, db, storage };
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User already logged in:", user.email);
+    // Agar user logged in hai, use dashboard pe bhejo
+    if (window.location.pathname.includes("index.html")) {
+      window.location.href = "dashboard.html";
+    }
+  } else {
+    console.log("No user logged in");
+  }
+});
