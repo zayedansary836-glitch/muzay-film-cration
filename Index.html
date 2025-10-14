@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Muzaya Film Creation</title>
+    <script type="module">
+      // Import Firebase SDK
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+      // Your Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
+        authDomain: "muzaya-film-creation.firebaseapp.com",
+        projectId: "muzaya-film-creation",
+        storageBucket: "muzaya-film-creation.firebasestorage.app",
+        messagingSenderId: "466440504989",
+        appId: "1:466440504989:web:ee937abfd4dae2f1ae3674",
+        measurementId: "G-02EG3SHXKC"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // Signup Example
+      async function signup() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          alert("Signup successful!");
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      // Login Example
+      async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          alert("Login successful!");
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      window.signup = signup;
+      window.login = login;
+    </script>
+  </head>
+
+  <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+    <h2>Muzaya Film Creation 🔥</h2>
+    <input type="email" id="email" placeholder="Email" /><br><br>
+    <input type="password" id="password" placeholder="Password" /><br><br>
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </body>
+</html>
