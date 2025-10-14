@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MFC Category</title>
+  <style>
+    body { font-family:'Poppins',sans-serif; margin:0; background:#fafafa; }
+    header { background:#ff7a00; color:white; padding:15px 25px; }
+    h1 { text-align:center; margin:30px 0; }
+    .services { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:0 20px; }
+    .service-card { background:white; padding:15px; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.1); text-align:center; }
+    .service-card img { width:100%; border-radius:10px; }
+    .hire-btn { background:#ff7a00; border:none; color:white; padding:8px 16px; border-radius:8px; margin-top:10px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2 id="catTitle">Category</h2>
+  </header>
+
+  <h1 id="catHeading"></h1>
+
+  <div class="services" id="serviceList"></div>
+
+  <script>
+    const cat = localStorage.getItem("selectedCategory");
+    const catTitle = document.getElementById("catTitle");
+    const catHeading = document.getElementById("catHeading");
+    const list = document.getElementById("serviceList");
+
+    const categoryNames = {
+      video: "Video Editing",
+      script: "Script Writing",
+      photo: "Photography",
+      voice: "Voice Over"
+    };
+
+    catTitle.textContent = categoryNames[cat] || "Category";
+    catHeading.textContent = `Top ${categoryNames[cat]} Services`;
+
+    // Mock data
+    const services = [
+      {title: "Pro Video Editor", price: "$50", img:"https://placehold.co/300x200"},
+      {title: "Cinematic Edit", price: "$70", img:"https://placehold.co/300x200"},
+      {title: "Quick Social Edit", price: "$30", img:"https://placehold.co/300x200"}
+    ];
+
+    services.forEach(s => {
+      const card = document.createElement("div");
+      card.className = "service-card";
+      card.innerHTML = `<img src="${s.img}"><h3>${s.title}</h3><p>${s.price}</p><button class='hire-btn'>Hire</button>`;
+      list.appendChild(card);
+    });
+  </script>
+</body>
+</html>
