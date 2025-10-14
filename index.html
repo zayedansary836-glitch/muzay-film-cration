@@ -3,77 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Muzaya Film Creation</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #ff7a00, #ffae42);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-    }
-    .card {
-      background: #fff6eb;
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    h1 {
-      color: #333;
-    }
-    button {
-      background-color: #ff7a00;
-      border: none;
-      color: white;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background-color: #ff9900;
-    }
-  </style>
+  <title>MFC - Muzaya Film Creation</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="card">
-    <h1>Welcome to Muzaya Film Creation</h1>
-    <button id="loginBtn">Login with Google</button>
-  </div>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="dashboard.html" class="btn">Login / Join</a>
+    </nav>
+  </header>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+  <section class="hero">
+    <h1>Unleash your <span>Creativity</span></h1>
+    <p>Share your talent, videos & stories with the world — powered by Muzaya Film Creation.</p>
+    <div class="search-bar">
+      <input type="text" placeholder='Try "wedding short film"' />
+      <button>🔍</button>
+    </div>
+  </section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
-      authDomain: "muzaya-film-creation.firebaseapp.com",
-      projectId: "muzaya-film-creation",
-      storageBucket: "muzaya-film-creation.firebasestorage.app",
-      messagingSenderId: "466440504989",
-      appId: "1:466440504989:web:ee937abfd4dae2f1ae3674",
-      measurementId: "G-02EG3SHXKC"
-    };
+  <section id="services" class="categories">
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/906/906343.png"><p>Video Editing</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"><p>Photography</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png"><p>Script Writing</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png"><p>Voice Over</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2584/2584640.png"><p>Animation</p></div>
+  </section>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+  <section id="about" class="about">
+    <h2>About Muzaya Film Creation</h2>
+    <p>MFC is your one-stop platform for filmmakers, editors, and artists to collaborate, upload, and explore creative work.</p>
+  </section>
 
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        alert(`Welcome ${user.displayName}!`);
-        window.location.href = "dashboard.html";
-      } catch (error) {
-        console.error(error);
-        alert("Login failed: " + error.message);
-      }
-    });
-  </script>
+  <footer class="footer">
+    <p>© 2025 Muzaya Film Creation | Designed with ❤️ in Orange</p>
+  </footer>
 </body>
 </html>
