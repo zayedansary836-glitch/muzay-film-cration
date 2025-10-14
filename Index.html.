@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muzaya Film Creation Login</title>
+  <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // Firebase configuration (from your Firebase console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
+      authDomain: "muzaya-film-creation.firebaseapp.com",
+      projectId: "muzaya-film-creation",
+      storageBucket: "muzaya-film-creation.firebasestorage.app",
+      messagingSenderId: "466440504989",
+      appId: "1:466440504989:web:ee937abfd4dae2f1ae3674",
+      measurementId: "G-02EG3SHXKC"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Login function
+    window.googleLogin = function() {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          document.getElementById("status").innerHTML = `
+            <h3>Welcome, ${user.displayName}</h3>
+            <img src="${user.photoURL}" width="80" style="border-radius:50%">
+            <p>${user.email}</p>
+            <button onclick="logout()">Logout</button>
+          `;
+        })
+        .catch((error) => {
+          console.error(error.message);
+          alert("Login failed: " + error.message);
+        });
+    }
+
+    // Logout function
+    window.logout = function() {
+      signOut(auth).then(() => {
+        document.getElementById("status").innerHTML = `
+          <button onclick="googleLogin()">Login with Google</button>
+        `;
+      });
+    }
+  </script>
+</head>
+<body style="text-align:center; margin-top:50px;">
+  <h2>Login to Muzaya Film Creation</h2>
+  <div id="status">
+    <button onclick="googleLogin()">Login with Google</button>
+  </div>
+</body>
+</html>
