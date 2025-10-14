@@ -1,257 +1,56 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muzaya Film Creation | Dashboard</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #fafafa;
-      color: #333;
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 240px;
-      background: #ff7a00;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 24px 16px;
-    }
-    .sidebar h2 {
-      font-size: 1.4rem;
-      margin-bottom: 32px;
-    }
-    .nav-item {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .nav-item:hover {
-      background: #ff9500;
-    }
-
-    /* Main Section */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 24px;
-      border-bottom: 1px solid #eee;
-      background: white;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .search-bar input {
-      width: 260px;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .user-pic {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #ff7a00;
-    }
-    .logout-btn {
-      background: #ff7a00;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    /* Hero Section */
-    .hero {
-      background: linear-gradient(135deg, #ff7a00, #ffae42);
-      color: white;
-      padding: 48px;
-      border-radius: 12px;
-      margin: 24px;
-    }
-    .hero h1 {
-      font-size: 2rem;
-      margin-bottom: 12px;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      margin-bottom: 16px;
-    }
-    .hero button {
-      background: white;
-      color: #ff7a00;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* Featured Section */
-    .section-title {
-      margin: 24px;
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 0 24px 48px 24px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    .card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-    }
-    .card h3 {
-      padding: 12px;
-      font-size: 1rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 16px;
-      border-top: 1px solid #eee;
-      color: #777;
-      background: #fff;
-    }
-
-    @media(max-width: 768px) {
-      .sidebar {
-        display: none;
-      }
-      .search-bar input {
-        width: 160px;
-      }
-    }
-  </style>
+  <title>MFC Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>Muzaya Film</h2>
-    <div class="nav-item" id="navHome">🏠 Home</div>
-    <div class="nav-item" id="navUpload">⬆️ Upload</div>
-    <div class="nav-item" id="navGallery">🖼️ Gallery</div>
-    <div class="nav-item" id="navOrders">📦 Orders</div>
-    <div class="nav-item" id="navMessages">💬 Messages</div>
-    <div class="nav-item" id="navProfile">👤 Profile</div>
-    <div class="nav-item" id="navSettings">⚙️ Settings</div>
-  </div>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </header>
 
-  <!-- Main -->
-  <div class="main">
-    <header>
-      <div class="search-bar">
-        <input type="text" placeholder="Search projects...">
-      </div>
-      <div class="user-info">
-        <div class="user-pic" id="userPic"></div>
-        <button class="logout-btn" id="logoutBtn">Logout</button>
-      </div>
-    </header>
-
-    <div class="hero">
-      <h1>Welcome, <span id="userName">User</span> 👋</h1>
-      <p>Ready to create something amazing today?</p>
-      <button id="ctaUpload">Upload New Project</button>
+  <section class="hero">
+    <h1>Welcome to <span>Muzaya Film Creation</span></h1>
+    <p>Your creative studio to share and explore talent</p>
+    <div class="search-bar">
+      <input type="text" placeholder='Try "short film editing"' />
+      <button>🔍</button>
     </div>
+  </section>
 
-    <div class="section-title">Your Featured Projects</div>
-    <div class="grid" id="projectGrid">
-      <div class="card"><img src="https://picsum.photos/300?1"><h3>Short Film Concept</h3></div>
-      <div class="card"><img src="https://picsum.photos/300?2"><h3>Music Video Edit</h3></div>
-      <div class="card"><img src="https://picsum.photos/300?3"><h3>Documentary Trailer</h3></div>
-      <div class="card"><img src="https://picsum.photos/300?4"><h3>Advertisement Reel</h3></div>
+  <section class="categories">
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/906/906343.png"><p>Video Editing</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"><p>Photography</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png"><p>Script Writing</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png"><p>Voice Over</p></div>
+    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2584/2584640.png"><p>Animation</p></div>
+  </section>
+
+  <section class="actions">
+    <h2>What would you like to do?</h2>
+    <div class="action-btns">
+      <a href="upload.html" class="btn">Upload Video / Photo</a>
+      <a href="#" class="btn">View Gallery</a>
+      <a href="#" class="btn">My Profile</a>
     </div>
-
-    <footer>
-      © 2025 Muzaya Film Creation. All rights reserved.
-    </footer>
-  </div>
+  </section>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBH3UcpeD-a-ZEHhghi6bTkGnO9vKeu22c",
-      authDomain: "muzaya-film-creation.firebaseapp.com",
-      projectId: "muzaya-film-creation",
-      storageBucket: "muzaya-film-creation.firebasestorage.app",
-      messagingSenderId: "466440504989",
-      appId: "1:466440504989:web:ee937abfd4dae2f1ae3674"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const logoutBtn = document.getElementById("logoutBtn");
-    const userName = document.getElementById("userName");
-    const userPic = document.getElementById("userPic");
-    const ctaUpload = document.getElementById("ctaUpload");
-
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "index.html";
-    });
-
-    ctaUpload.addEventListener("click", () => {
-      window.location.href = "upload.html";
-    });
+    import { auth } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
     onAuthStateChanged(auth, user => {
       if (!user) {
         window.location.href = "index.html";
-      } else {
-        userName.textContent = user.displayName || "User";
-        if (user.photoURL) {
-          userPic.style.backgroundImage = `url(${user.photoURL})`;
-          userPic.style.backgroundSize = "cover";
-        }
       }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
     });
   </script>
 </body>
