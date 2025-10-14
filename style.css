@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fffaf5;
+  color: #333;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ff6600;
+  color: white;
+  padding: 10px 20px;
+}
+.logo {
+  font-weight: 800;
+  font-size: 1.6em;
+  letter-spacing: 2px;
+}
+.logout-btn {
+  background: white;
+  color: #ff6600;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 30px 10px;
+}
+.hero span {
+  color: #ff6600;
+}
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.search-bar input {
+  width: 70%;
+  padding: 10px;
+  border: 2px solid #ff6600;
+  border-radius: 25px 0 0 25px;
+  outline: none;
+}
+.search-bar button {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 0 25px 25px 0;
+}
+
+/* Categories */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 20px;
+}
+.category {
+  background: #fff;
+  border-radius: 15px;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+.category:hover {
+  transform: translateY(-5px);
+}
+.category img {
+  width: 50px;
+  height: 50px;
+}
+.category p {
+  font-weight: 600;
+  color: #ff6600;
+}
+
+/* Actions */
+.actions {
+  text-align: center;
+  padding: 30px 20px;
+}
+.action-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: auto;
+}
+.btn {
+  display: inline-block;
+  background-color: #ff6600;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn:hover {
+  background-color: #e65c00;
+}
