@@ -1,57 +1,168 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MFC Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MFC — Dashboard</title>
+  <style>
+    :root{
+      --orange:#ff7a00;
+      --bg:#faf8f8;
+      --card:#fff;
+      --muted:#666;
+      font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      --maxW:1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#fff 0%, #fff8f1 100%);color:#111}
+    header{
+      position:sticky;top:0;background:var(--orange);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 24px rgba(0,0,0,0.08);
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800}
+    .container{max-width:var(--maxW);margin:24px auto;padding:0 18px}
+    h1{font-size:28px;margin:8px 0}
+    p.muted{color:var(--muted);margin-bottom:16px}
+
+    .panel{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,0.06)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+    .card{padding:18px;border-radius:12px;background:linear-gradient(180deg,#fff,#fff);display:flex;flex-direction:column;gap:10px}
+    .big-btn{background:var(--orange);color:#fff;padding:12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+    .outline-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px;border-radius:10px;cursor:pointer}
+
+    .upload-area{border:2px dashed rgba(0,0,0,0.06);padding:18px;border-radius:12px;text-align:center}
+    input[type=file]{display:none}
+
+    .user-info{display:flex;gap:12px;align-items:center}
+    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#fff, #ffe7cf);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--orange)}
+    .logout{background:#fff;border-radius:10px;padding:8px 12px;border:none;cursor:pointer}
+
+    @media (max-width:640px){ header{padding:12px} .container{margin:12px auto} }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MFC</div>
-    <button id="logoutBtn" class="logout-btn">Logout</button>
+  <header>
+    <div class="brand">
+      <div class="logo">MFC</div>
+      <div>
+        <div style="font-weight:800">Muzaya Film Creation</div>
+        <div style="font-size:12px;opacity:0.9">Creator marketplace & gallery</div>
+      </div>
+    </div>
+    <div>
+      <button id="logoutBtn" class="outline-btn">Logout</button>
+    </div>
   </header>
 
-  <section class="hero">
-    <h1>Welcome to <span>Muzaya Film Creation</span></h1>
-    <p>Your creative studio to share and explore talent</p>
-    <div class="search-bar">
-      <input type="text" placeholder='Try "short film editing"' />
-      <button>🔍</button>
-    </div>
-  </section>
+  <div class="container">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div class="avatar" id="avatar">U</div>
+          <div>
+            <h1 id="welcome">Welcome, Creator</h1>
+            <p class="muted" id="uemail">you@domain.com</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="big-btn" id="uploadBtn">Upload Photo / Video</button>
+          <button class="outline-btn" id="profileBtn">My Profile</button>
+        </div>
+      </div>
 
-  <section class="categories">
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/906/906343.png"><p>Video Editing</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"><p>Photography</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png"><p>Script Writing</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png"><p>Voice Over</p></div>
-    <div class="category"><img src="https://cdn-icons-png.flaticon.com/512/2584/2584640.png"><p>Animation</p></div>
-  </section>
+      <div class="grid">
+        <div class="card">
+          <div style="font-weight:700">Quick Actions</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="outline-btn" id="viewGallery">View Gallery</button>
+            <button class="outline-btn" id="myUploads">My Uploads</button>
+            <button class="outline-btn" id="analytics">Analytics</button>
+          </div>
+        </div>
 
-  <section class="actions">
-    <h2>What would you like to do?</h2>
-    <div class="action-btns">
-      <a href="upload.html" class="btn">Upload Video / Photo</a>
-      <a href="#" class="btn">View Gallery</a>
-      <a href="#" class="btn">My Profile</a>
+        <div class="card">
+          <div style="font-weight:700">Upload Area</div>
+          <div class="upload-area">
+            <p>Choose a photo or video to upload</p>
+            <input id="fileInput" type="file" accept="image/*,video/*" />
+            <label for="fileInput" class="big-btn" style="display:inline-block;cursor:pointer">Select File</label>
+            <div id="uploadStatus" style="margin-top:10px;color:var(--muted)"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:700">Profile</div>
+          <div>
+            <p class="small muted">Complete your profile so clients trust you.</p>
+            <button class="outline-btn" id="editProfile">Edit Profile</button>
+            <button class="outline-btn" id="becomePro">Offer Services</button>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </section>
+  </div>
 
   <script type="module">
-    import { auth } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { auth, storage } from "./firebase-config.js";
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+
+    const welcome = document.getElementById('welcome');
+    const uemail = document.getElementById('uemail');
+    const avatar = document.getElementById('avatar');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const fileInput = document.getElementById('fileInput');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const uploadBtn = document.getElementById('uploadBtn');
 
     onAuthStateChanged(auth, user => {
-      if (!user) {
-        window.location.href = "index.html";
+      if(!user) {
+        // not logged in
+        window.location.href = 'index.html';
+        return;
+      }
+      // show user info
+      welcome.textContent = `Welcome, ${user.displayName || (user.email || '').split('@')[0]}`;
+      uemail.textContent = user.email || '';
+      avatar.textContent = (user.displayName ? user.displayName[0].toUpperCase() : (user.email||'U')[0].toUpperCase());
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await signOut(auth);
+      localStorage.removeItem('mfc_user');
+      window.location.href = 'index.html';
+    });
+
+    // Upload flow using Firebase Storage (simple)
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      uploadStatus.textContent = 'Preparing upload...';
+      const uid = auth.currentUser?.uid || 'anon';
+      const path = `uploads/${uid}/${Date.now()}_${file.name}`;
+      try {
+        const storageRef = ref(storage, path);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadStatus.textContent = 'Uploading... 0%';
+        uploadTask.on('state_changed', (snapshot) => {
+          const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          uploadStatus.textContent = `Uploading... ${prog}%`;
+        }, (err) => {
+          uploadStatus.textContent = 'Upload failed: ' + err.message;
+        }, async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          uploadStatus.textContent = 'Upload complete ✅';
+          console.log('Uploaded URL:', url);
+          // TODO: save file metadata to Firestore (owner, url, title, type) — later step
+        });
+      } catch(err){
+        uploadStatus.textContent = 'Upload error: ' + err.message;
       }
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.href = "index.html";
-    });
+    // alternative upload button to open file chooser
+    uploadBtn.addEventListener('click', () => fileInput.click());
   </script>
 </body>
 </html>
