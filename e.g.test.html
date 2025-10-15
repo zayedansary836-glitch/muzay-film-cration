@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Profile Preview Test</title>
+  <style>
+    #profilePreview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid orange;
+      object-fit: cover;
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Profile Image Preview Test</h2>
+
+  <input type="file" id="profilePic" accept="image/*">
+  <br>
+  <img id="profilePreview" alt="Preview">
+
+  <script>
+    const input = document.getElementById("profilePic");
+    const preview = document.getElementById("profilePreview");
+
+    input.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.src = "";
+        preview.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
