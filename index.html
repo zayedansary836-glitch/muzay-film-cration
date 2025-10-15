@@ -738,7 +738,42 @@
 
     // Expose some functions for debugging in console
     window._mfc = { auth, db, storage, loadJobs, loadMyUploads, loadGallery };
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MFC — Home</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <div>
+      <a href="login.html" class="btn-ghost">Login / Join</a>
+    </div>
+  </header>
 
+  <main>
+    <div class="hero-card card">
+      <h1>We craft cinematic wedding films & timeless photos</h1>
+      <p>Discover creators, browse video portfolios, or get hired — simple and beautiful.</p>
+    </div>
+
+    <section class="card" style="margin-top:16px;">
+      <h2 style="margin:0 0 12px">Explore</h2>
+      <div id="feedContainer"></div>
+    </section>
+  </main>
+
+  <footer>© Muzaya Film Creation</footer>
+
+  <script type="module">
+    import { loadFeed } from './js/feed.js';
+    const feed = document.getElementById('feedContainer');
+    loadFeed(feed);
+  
   </script>
 
 </body>
