@@ -78,3 +78,43 @@ footer{margin:28px 0 60px;color:var(--muted);text-align:center}
   .grid{grid-template-columns:repeat(3,1fr)}
   body{padding:28px}
 }
+.profile-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #555;
+}
+
+.bottom-nav .active {
+  color: #ff6600;
+  font-weight: bold;
+}
