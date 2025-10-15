@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MFC | My Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="profile-page">
+  <header class="navbar">
+    <h1>MFC Creator Hub</h1>
+    <button id="logoutBtn" class="btn">Logout</button>
+  </header>
+
+  <main class="profile-container">
+    <h2>Edit Your Profile</h2>
+    <form id="profileForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+      </div>
+
+      <div class="form-group">
+        <label>About You</label>
+        <textarea id="bio" placeholder="Tell about your work"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Skills (comma separated)</label>
+        <input type="text" id="skills" placeholder="e.g. wedding photography, video editing">
+      </div>
+
+      <div class="form-group">
+        <label>Profile Picture</label>
+        <input type="file" id="profilePic" accept="image/*">
+      </div>
+
+      <button type="submit" class="btn">Save Profile</button>
+    </form>
+
+    <section class="saved-profile">
+      <h3>Your Saved Info</h3>
+      <img id="displayPic" src="" alt="Profile Picture" style="width:100px; border-radius:50%;">
+      <p id="displayName"></p>
+      <p id="displayBio"></p>
+      <p id="displaySkills"></p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button onclick="window.location.href='dashboard.html'">🏠 Dashboard</button>
+    <button class="active">👤 My Profile</button>
+  </nav>
+
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/profile.js"></script>
+</body>
+</html>
