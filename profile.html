@@ -144,5 +144,60 @@
       });
     });
   </script>
+  <script>
+const fileInput = document.getElementById("profilePic");
+const previewImage = document.getElementById("previewImage");
+
+// 📸 Image preview system
+fileInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// ✅ Save data in Firebase
+document.getElementById("saveProfile").addEventListener("click", async () => {
+  const name = document.getElementById("name").value;
+  const profession = document.getElementById("profession").value;
+  const location = document.getElementById("location").value;
+  const about = document.getElementById("about").value;
+  const file = fileInput.files[0];
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please login first!");
+    return;
+  }
+
+  let photoURL = "";
+  if (file) {
+    const storageRef = storage.ref(`profiles/${user.uid}/${file.name}`);
+    await storageRef.put(file);
+    photoURL = await storageRef.getDownloadURL();
+  }
+
+  await db.collection("users").doc(user.uid).set({
+    name,
+    profession,
+    location,
+    about,
+    photoURL,
+  }, { merge: true });
+
+  alert("Profile saved successfully!");
+});
+</script>
 </body>
 </html>
