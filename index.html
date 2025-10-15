@@ -1,38 +1,119 @@
-    <!-- index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>MFC — Home</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Muzaya Film Creation — Home</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MFC</div>
-    <div>
-      <a href="login.html" class="btn-ghost">Login / Join</a>
+  <header class="topbar">
+    <div class="brand"><span class="logo">MFC</span> Muzaya Film Creation</div>
+    <div class="actions">
+      <button id="openLogin" class="btn btn-outline">Login / Join</button>
     </div>
   </header>
 
-  <main>
-    <div class="hero-card card">
+  <main class="container">
+    <section class="hero-card">
       <h1>We craft cinematic wedding films & timeless photos</h1>
-      <p>Discover creators, browse video portfolios, or get hired — simple and beautiful.</p>
-    </div>
+      <p>Share your work, discover creators, or get hired — simple, fast, beautiful.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="dashboard.html">Creator Hub</a>
+        <a class="btn btn-light" href="upload.html">Explore Gallery</a>
+      </div>
+    </section>
 
-    <section class="card" style="margin-top:16px;">
-      <h2 style="margin:0 0 12px">Explore</h2>
-      <div id="feedContainer"></div>
+    <section class="features">
+      <h2>Popular services</h2>
+      <div class="grid-tiles">
+        <div class="tile">Video Editing</div>
+        <div class="tile">Photography</div>
+        <div class="tile">Script Writing</div>
+        <div class="tile">Voice Over</div>
+        <div class="tile">Animation</div>
+        <div class="tile">Music & Sound</div>
+      </div>
     </section>
   </main>
 
-  <footer>© Muzaya Film Creation</footer>
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Login to MFC</h3>
+      <input id="email" placeholder="Email" type="email" />
+      <input id="password" placeholder="Password" type="password" />
+      <div class="row">
+        <button id="loginBtn" class="btn btn-primary">Login</button>
+        <button id="signupBtn" class="btn btn-outline">Register</button>
+      </div>
+      <div class="row">
+        <button id="googleSign" class="btn btn-google">Sign in with Google</button>
+        <button id="forgotBtn" class="btn btn-link">Forgot?</button>
+      </div>
+      <button id="closeLogin" class="btn btn-close">Close</button>
+      <div id="loginMsg" class="msg"></div>
+    </div>
+  </div>
 
-  <script type="module">
-    import { loadFeed } from './js/feed.js';
-    const feed = document.getElementById('feedContainer');
-    loadFeed(feed);
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script src="js/firebase-init.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // UI interactions
+    const modal = document.getElementById('loginModal');
+    document.getElementById('openLogin').onclick = () => modal.classList.remove('hidden');
+    document.getElementById('closeLogin').onclick = () => modal.classList.add('hidden');
+
+    // wire auth UI
+    const loginMsg = document.getElementById('loginMsg');
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      loginMsg.textContent = '';
+      const email = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      try {
+        await loginWithEmail(email, pw);
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        loginMsg.textContent = e.message;
+      }
+    });
+
+    document.getElementById('signupBtn').addEventListener('click', async () => {
+      loginMsg.textContent = '';
+      const email = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      try {
+        await signupWithEmail(email, pw);
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        loginMsg.textContent = e.message;
+      }
+    });
+
+    document.getElementById('googleSign').addEventListener('click', async () => {
+      try {
+        await signInWithGoogle();
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        loginMsg.textContent = e.message;
+      }
+    });
+
+    document.getElementById('forgotBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      if (!email) return loginMsg.textContent = 'Enter email to reset.';
+      try {
+        await sendPasswordReset(email);
+        loginMsg.textContent = 'Reset email sent (check inbox).';
+      } catch (e) {
+        loginMsg.textContent = e.message;
+      }
+    });
   </script>
 </body>
 </html>
