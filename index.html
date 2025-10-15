@@ -1,119 +1,311 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Muzaya Film Creation — Home</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MFC | Muzaya Film Creation</title>
+  <style>
+    :root {
+      --primary: #ff6b00;
+      --bg: #fffaf5;
+      --text: #222;
+      --card: #ffffff;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f5f5f5;
+      --card: #1e1e1e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      animation: gradientAnim 12s infinite alternate;
+      background-size: 300% 300%;
+      background-image: linear-gradient(-45deg, #fff4e6, #ffe0cc, #fffaf5, #fff0d6);
+    }
+
+    @keyframes gradientAnim {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 25px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 22px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: 500;
+    }
+
+    .toggle-btn {
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 70px 20px;
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      color: var(--primary);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+    }
+
+    .slider {
+      max-width: 900px;
+      margin: 30px auto;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .slides img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .featured {
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .featured h3 {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: var(--primary);
+    }
+
+    .creator-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .creator {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 15px;
+      flex: 0 0 180px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .creator img {
+      width: 100%;
+      border-radius: 10px;
+      height: 130px;
+      object-fit: cover;
+    }
+
+    .creator h4 {
+      margin-top: 8px;
+      color: var(--primary);
+      font-size: 16px;
+    }
+
+    .services {
+      padding: 50px 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 25px;
+      text-align: center;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .login-section {
+      text-align: center;
+      padding: 50px 20px;
+      background: rgba(255, 107, 0, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: var(--primary);
+      color: white;
+      font-size: 14px;
+    }
+
+    /* Dashboard style preview */
+    .dashboard {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: var(--card);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .dashboard h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .data-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .data-item {
+      background: rgba(255,107,0,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand"><span class="logo">MFC</span> Muzaya Film Creation</div>
-    <div class="actions">
-      <button id="openLogin" class="btn btn-outline">Login / Join</button>
-    </div>
+  <header>
+    <h1>MFC Muzaya Film Creation</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Upload</a>
+      <a href="#">Login</a>
+    </nav>
+    <button class="toggle-btn" id="themeToggle">🌙</button>
   </header>
 
-  <main class="container">
-    <section class="hero-card">
-      <h1>We craft cinematic wedding films & timeless photos</h1>
-      <p>Share your work, discover creators, or get hired — simple, fast, beautiful.</p>
-      <div class="hero-buttons">
-        <a class="btn btn-primary" href="dashboard.html">Creator Hub</a>
-        <a class="btn btn-light" href="upload.html">Explore Gallery</a>
-      </div>
-    </section>
+  <section class="hero">
+    <h2>We Craft Cinematic Wedding Films & Timeless Photos</h2>
+    <p>Join the creative world — share your work, explore creators, and hire professionals with ease.</p>
+    <button class="btn">Join Creator Hub</button>
+  </section>
 
-    <section class="features">
-      <h2>Popular services</h2>
-      <div class="grid-tiles">
-        <div class="tile">Video Editing</div>
-        <div class="tile">Photography</div>
-        <div class="tile">Script Writing</div>
-        <div class="tile">Voice Over</div>
-        <div class="tile">Animation</div>
-        <div class="tile">Music & Sound</div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal hidden">
-    <div class="modal-card">
-      <h3>Login to MFC</h3>
-      <input id="email" placeholder="Email" type="email" />
-      <input id="password" placeholder="Password" type="password" />
-      <div class="row">
-        <button id="loginBtn" class="btn btn-primary">Login</button>
-        <button id="signupBtn" class="btn btn-outline">Register</button>
-      </div>
-      <div class="row">
-        <button id="googleSign" class="btn btn-google">Sign in with Google</button>
-        <button id="forgotBtn" class="btn btn-link">Forgot?</button>
-      </div>
-      <button id="closeLogin" class="btn btn-close">Close</button>
-      <div id="loginMsg" class="msg"></div>
+  <div class="slider" id="slider">
+    <div class="slides">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="slide1">
+      <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" alt="slide2">
+      <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944" alt="slide3">
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <section class="featured">
+    <h3>Featured Creators</h3>
+    <div class="creator-carousel">
+      <div class="creator"><img src="https://i.pravatar.cc/200?img=1"><h4>Sarah Lens</h4></div>
+      <div class="creator"><img src="https://i.pravatar.cc/200?img=2"><h4>Mike Frame</h4></div>
+      <div class="creator"><img src="https://i.pravatar.cc/200?img=3"><h4>Raj Edits</h4></div>
+      <div class="creator"><img src="https://i.pravatar.cc/200?img=4"><h4>Anita Shots</h4></div>
+      <div class="creator"><img src="https://i.pravatar.cc/200?img=5"><h4>Zahid Films</h4></div>
+    </div>
+  </section>
 
-  <script src="js/firebase-init.js"></script>
-  <script src="js/auth.js"></script>
+  <section class="services">
+    <div class="service-grid">
+      <div class="service-card"><h4>🎬 Video Editing</h4><p>Professional cinematic editing for projects.</p></div>
+      <div class="service-card"><h4>📸 Photography</h4><p>Wedding, portrait & event shoots.</p></div>
+      <div class="service-card"><h4>🎙️ Voice Over</h4><p>Hire skilled artists for dubbing & VO.</p></div>
+      <div class="service-card"><h4>🖋 Script Writing</h4><p>Creative storytelling for films & ads.</p></div>
+    </div>
+  </section>
+
+  <div class="dashboard">
+    <h3>📊 Real-Time Dashboard Preview</h3>
+    <div class="data-list" id="dataList">
+      <div class="data-item">Loading Firebase data...</div>
+    </div>
+  </div>
+
+  <footer>© 2025 Muzaya Film Creation | All Rights Reserved</footer>
+
   <script>
-    // UI interactions
-    const modal = document.getElementById('loginModal');
-    document.getElementById('openLogin').onclick = () => modal.classList.remove('hidden');
-    document.getElementById('closeLogin').onclick = () => modal.classList.add('hidden');
-
-    // wire auth UI
-    const loginMsg = document.getElementById('loginMsg');
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-      loginMsg.textContent = '';
-      const email = document.getElementById('email').value.trim();
-      const pw = document.getElementById('password').value;
-      try {
-        await loginWithEmail(email, pw);
-        window.location.href = 'dashboard.html';
-      } catch (e) {
-        loginMsg.textContent = e.message;
-      }
+    // Dark Mode toggle with local storage
+    const toggle = document.getElementById('themeToggle');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      toggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
     });
 
-    document.getElementById('signupBtn').addEventListener('click', async () => {
-      loginMsg.textContent = '';
-      const email = document.getElementById('email').value.trim();
-      const pw = document.getElementById('password').value;
-      try {
-        await signupWithEmail(email, pw);
-        window.location.href = 'dashboard.html';
-      } catch (e) {
-        loginMsg.textContent = e.message;
-      }
-    });
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+      toggle.textContent = '☀️';
+    }
 
-    document.getElementById('googleSign').addEventListener('click', async () => {
-      try {
-        await signInWithGoogle();
-        window.location.href = 'dashboard.html';
-      } catch (e) {
-        loginMsg.textContent = e.message;
-      }
-    });
+    // Slider
+    const slides = document.querySelector('.slides');
+    const totalSlides = document.querySelectorAll('.slides img').length;
+    let index = 0;
+    setInterval(() => {
+      index = (index + 1) % totalSlides;
+      slides.style.transform = `translateX(${-index * 100}%)`;
+    }, 4000);
 
-    document.getElementById('forgotBtn').addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      if (!email) return loginMsg.textContent = 'Enter email to reset.';
-      try {
-        await sendPasswordReset(email);
-        loginMsg.textContent = 'Reset email sent (check inbox).';
-      } catch (e) {
-        loginMsg.textContent = e.message;
-      }
-    });
+    // Firebase (sample UI ready)
+    const dataList = document.getElementById('dataList');
+    // Example dummy data for now
+    setTimeout(() => {
+      dataList.innerHTML = `
+        <div class='data-item'>🎞 Projects: 24</div>
+        <div class='data-item'>👤 Creators: 18</div>
+        <div class='data-item'>📸 Photos Uploaded: 152</div>
+        <div class='data-item'>🎥 Videos Uploaded: 63</div>
+      `;
+    }, 1500);
   </script>
 </body>
 </html>
