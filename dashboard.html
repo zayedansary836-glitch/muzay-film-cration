@@ -1,64 +1,68 @@
-<!-- dashboard.html -->
 <!doctype html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>MFC — Dashboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MFC Creator Hub</title>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">MFC Creator Hub</div>
-    <div><button id="logoutBtn" class="btn-ghost">Logout</button></div>
+  <header class="topbar">
+    <div class="brand"><span class="logo">MFC</span> Creator Hub</div>
+    <div class="actions">
+      <button id="logout" class="btn btn-outline">Logout</button>
+    </div>
   </header>
 
-  <main>
-    <section class="card">
-      <div id="userArea">Loading profile...</div>
-      <div style="margin-top:12px">
-        <a class="btn-primary" href="upload.html">Upload Photo / Video</a>
-        <a class="btn-ghost" href="profile.html">My Profile</a>
+  <main class="container">
+    <section class="card welcome">
+      <div id="avatar" class="avatar">U</div>
+      <h2 id="welcomeText">Welcome, Creator</h2>
+      <p id="emailText">you@domain.com</p>
+      <div class="row">
+        <a class="btn btn-primary" href="upload.html">Upload Photo / Video</a>
+        <a class="btn btn-light" href="profile.html">My Profile</a>
       </div>
     </section>
 
-    <section class="card" id="myUploads" style="margin-top:16px">
+    <section class="card uploads">
       <h3>My uploads</h3>
-      <div id="myUploadsList"></div>
+      <div id="myUploads">No uploads yet.</div>
     </section>
   </main>
 
-  <script type="module">
-    import { onAuth, logout } from './js/auth.js';
-    import { db } from './js/firebase.js';
-    import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-
-    const userArea = document.getElementById('userArea');
-    const myUploadsList = document.getElementById('myUploadsList');
-
-    onAuth(async user => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // redirect if not logged in
+    auth.onAuthStateChanged(async user => {
+      if (!user) return location.href = 'index.html';
+      document.getElementById('welcomeText').textContent = `Welcome, ${user.displayName || 'Creator'}`;
+      document.getElementById('emailText').textContent = user.email || '';
+      if (user.photoURL) {
+        const a = document.getElementById('avatar');
+        a.style.backgroundImage = `url(${user.photoURL})`;
+        a.textContent = '';
       }
-      userArea.innerHTML = `<h2>Welcome, ${user.displayName || user.email}</h2><p>${user.email}</p>`;
-      // load my uploads
-      const q = query(collection(db,'videos'), where('uid','==', user.uid), orderBy('createdAt','desc'));
-      const snap = await getDocs(q);
-      myUploadsList.innerHTML = '';
-      if (snap.empty) myUploadsList.innerHTML = '<p>No uploads yet.</p>';
-      snap.forEach(d => {
-        const data = d.data();
-        const el = document.createElement('div');
-        el.className = 'video-card';
-        el.innerHTML = `<a href="watch.html?id=${d.id}"><h4>${data.title}</h4><small>${data.category}</small></a>`;
-        myUploadsList.appendChild(el);
+      // list uploads from firestore collection `uploads` where owner == uid
+      const snapshot = await db.collection('uploads').where('owner','==', user.uid).get();
+      const container = document.getElementById('myUploads');
+      if (snapshot.empty) { container.textContent = 'No uploads yet.'; return; }
+      container.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const item = document.createElement('div');
+        item.className = 'upload-item';
+        item.innerHTML = `<strong>${d.title||'Untitled'}</strong><div>${d.type||''}</div><a href="${d.fileURL}" target="_blank">View</a>`;
+        container.appendChild(item);
       });
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
+    document.getElementById('logout').addEventListener('click', async () => {
       await logout();
-      window.location.href = 'index.html';
+      location.href = 'index.html';
     });
   </script>
 </body>
