@@ -1,0 +1,29 @@
+<!-- watch.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MFC — Watch</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <div><a href="index.html" class="btn-ghost">Home</a></div>
+  </header>
+
+  <main>
+    <section class="card" id="watchContainer">Loading...</section>
+  </main>
+
+  <script type="module">
+    import { initWatch } from './js/watch.js';
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const container = document.getElementById('watchContainer');
+    if (!id) container.innerHTML = '<p>No video selected.</p>';
+    else initWatch(id, container);
+  </script>
+</body>
+</html>
