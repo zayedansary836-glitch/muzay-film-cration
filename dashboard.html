@@ -112,18 +112,18 @@
   </div>
 
   <script type="module">
-    // 🔥 Firebase Config (replace with your own)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+    // 🔥 Firebase Config (replace with your actual project config)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "YOUR-API-KEY",
-      authDomain: "YOUR-AUTH-DOMAIN",
-      projectId: "YOUR-PROJECT-ID",
-      storageBucket: "YOUR-STORAGE-BUCKET",
-      messagingSenderId: "YOUR-MESSAGE-ID",
-      appId: "YOUR-APP-ID"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -133,17 +133,24 @@
     // 🧠 Check if user logged in
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          document.getElementById("userName").textContent = userDoc.data().name || "User";
-          document.getElementById("roleType").textContent = userDoc.data().role || "Creator";
-        } else {
-          document.getElementById("userName").textContent = user.email;
-        }
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            document.getElementById("userName").textContent = data.name || "User";
+            document.getElementById("roleType").textContent = data.role || "Creator";
+          } else {
+            document.getElementById("userName").textContent = user.email;
+            document.getElementById("roleType").textContent = "Standard User";
+          }
 
-        document.getElementById("uploadCount").textContent = "4 Uploaded";
-        document.getElementById("viewsCount").textContent = "250 Views";
-        document.getElementById("msgCount").textContent = "2 New Messages";
+          // Demo static data (replace later with Firestore counts)
+          document.getElementById("uploadCount").textContent = "4 Uploaded";
+          document.getElementById("viewsCount").textContent = "250 Views";
+          document.getElementById("msgCount").textContent = "2 New Messages";
+        } catch (err) {
+          console.error("Firestore error:", err);
+        }
       } else {
         window.location.href = "login.html";
       }
@@ -153,6 +160,8 @@
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
         window.location.href = "login.html";
+      }).catch((error) => {
+        console.error("Logout error:", error);
       });
     });
   </script>
