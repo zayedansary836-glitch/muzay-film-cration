@@ -1,160 +1,63 @@
-<!DOCTYPE html>
+<!-- upload.html -->
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload | Muzaya Film Creation</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #fffaf5;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-
-    header {
-      background-color: #ff7a00;
-      color: white;
-      padding: 15px 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 60px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      text-align: center;
-      color: #ff7a00;
-    }
-
-    .upload-box {
-      text-align: center;
-      border: 2px dashed #ff7a00;
-      padding: 40px;
-      border-radius: 10px;
-      background: #fff5ec;
-      transition: 0.3s;
-    }
-
-    .upload-box:hover {
-      background: #ffe9d6;
-    }
-
-    input[type="file"] {
-      margin: 20px 0;
-      padding: 10px;
-    }
-
-    button {
-      background: #ff7a00;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background: #e66b00;
-    }
-
-    .message {
-      text-align: center;
-      margin-top: 20px;
-      font-weight: 500;
-    }
-
-    .back {
-      display: inline-block;
-      margin-top: 15px;
-      color: #ff7a00;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .back:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <title>MFC — Upload</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
-    <div>MFC Upload</div>
-    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <div><a href="dashboard.html" class="btn-ghost">Dashboard</a></div>
   </header>
 
-  <div class="container">
-    <h2>Upload Your File</h2>
-    <div class="upload-box">
-      <input type="file" id="fileInput" />
-      <br />
-      <button id="uploadBtn">Upload Now</button>
-    </div>
-    <div class="message" id="message"></div>
-  </div>
+  <main>
+    <section class="card">
+      <h2>Upload Your Work</h2>
+      <p>Choose a video or photo to upload. Maximum allowed size depends on your Firebase rules.</p>
+
+      <div class="upload-area">
+        <input id="fileInput" type="file" accept="video/*,image/*" />
+        <div style="margin-top:10px">
+          <input id="title" placeholder="Title" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:8px" />
+          <textarea id="desc" rows="3" placeholder="Description" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:8px"></textarea>
+          <select id="category" style="margin-top:8px;padding:8px;border-radius:8px">
+            <option>Video Editing</option>
+            <option>Photography</option>
+            <option>Script Writing</option>
+            <option>Animation</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div style="margin-top:12px">
+          <button id="uploadBtn" class="btn-primary">Upload</button>
+          <div id="progress" class="progress"></div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script type="module">
-    import { storage, auth } from "./firebase.js";
-    import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import { onAuth } from './js/auth.js';
+    import { initUploadForm } from './js/upload.js';
 
-    const fileInput = document.getElementById("fileInput");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const message = document.getElementById("message");
-
-    let currentUser = null;
-
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        message.innerHTML = "⚠️ Please login first.";
-        uploadBtn.disabled = true;
-      } else {
-        currentUser = user;
-      }
+    onAuth(user => {
+      if (!user) window.location.href = 'login.html';
     });
 
-    uploadBtn.addEventListener("click", () => {
-      const file = fileInput.files[0];
-      if (!file) {
-        message.innerHTML = "Please select a file!";
-        return;
-      }
+    const fileInput = document.getElementById('fileInput');
+    const titleEl = document.getElementById('title');
+    const descEl = document.getElementById('desc');
+    const catEl = document.getElementById('category');
+    const progressEl = document.getElementById('progress');
+    const uploadBtn = document.getElementById('uploadBtn');
 
-      if (!currentUser) {
-        message.innerHTML = "⚠️ You must be logged in to upload.";
-        return;
-      }
-
-      const storageRef = ref(storage, `uploads/${currentUser.uid}/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        snapshot => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          message.innerHTML = `Uploading... ${progress.toFixed(0)}%`;
-        },
-        error => {
-          message.innerHTML = `❌ Error: ${error.message}`;
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-            message.innerHTML = `✅ Upload successful! <br> <a href="${downloadURL}" target="_blank">View File</a>`;
-          });
-        }
-      );
+    initUploadForm(fileInput, titleEl, descEl, catEl, progressEl, uploadBtn, () => {
+      alert('Upload saved to feed!');
+      window.location.href = 'index.html';
     });
   </script>
 </body>
