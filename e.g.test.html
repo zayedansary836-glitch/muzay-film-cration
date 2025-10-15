@@ -2,42 +2,130 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Profile Preview Test</title>
+  <title>My Profile</title>
   <style>
-    #profilePreview {
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff9f3;
+    }
+    .profile-container {
+      width: 90%;
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .profile-container img {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       border: 3px solid orange;
       object-fit: cover;
-      display: none;
-      margin-top: 10px;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      background-color: orange;
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h2>Profile Image Preview Test</h2>
+  <div class="profile-container">
+    <h2>My Profile</h2>
+    <img id="profilePreview" src="default-avatar.png" alt="Profile Picture"><br>
+    <input type="file" id="profilePic" accept="image/*">
 
-  <input type="file" id="profilePic" accept="image/*">
-  <br>
-  <img id="profilePreview" alt="Preview">
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="text" id="skill" placeholder="Your Skill">
+    <input type="text" id="location" placeholder="Location">
+    <textarea id="bio" placeholder="About You"></textarea>
+    <button id="saveProfile">Save Profile</button>
+  </div>
 
-  <script>
-    const input = document.getElementById("profilePic");
+  <script type="module">
+    // ========== Firebase Config ==========
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      // ⚠️ apna firebase config yahan daalo
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const profilePic = document.getElementById("profilePic");
     const preview = document.getElementById("profilePreview");
+    const saveBtn = document.getElementById("saveProfile");
 
-    input.addEventListener("change", (event) => {
+    let selectedFile = null;
+    let userUid = null;
+
+    // ✅ Preview before upload
+    profilePic.addEventListener("change", (event) => {
       const file = event.target.files[0];
       if (file) {
+        selectedFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
           preview.src = e.target.result;
-          preview.style.display = "block";
         };
         reader.readAsDataURL(file);
+      }
+    });
+
+    // ✅ Save Profile
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userUid = user.uid;
+
+        saveBtn.addEventListener("click", async () => {
+          try {
+            let photoURL = preview.src;
+
+            // If a new file is selected, upload to Firebase Storage
+            if (selectedFile) {
+              const storageRef = ref(storage, `profilePics/${userUid}.jpg`);
+              await uploadBytes(storageRef, selectedFile);
+              photoURL = await getDownloadURL(storageRef);
+            }
+
+            // Save to Firestore
+            await setDoc(doc(db, "users", userUid), {
+              name: document.getElementById("name").value,
+              skill: document.getElementById("skill").value,
+              location: document.getElementById("location").value,
+              bio: document.getElementById("bio").value,
+              photoURL: photoURL,
+              email: user.email
+            });
+
+            alert("✅ Profile saved successfully!");
+          } catch (error) {
+            alert("❌ Error saving profile: " + error.message);
+          }
+        });
       } else {
-        preview.src = "";
-        preview.style.display = "none";
+        window.location.href = "login.html";
       }
     });
   </script>
