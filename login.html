@@ -1,66 +1,116 @@
-<script type="module">
-  import { emailLogin, googleSignIn, registerEmail, forgotPassword, onAuth } from './js/auth.js';
-  import { auth } from './js/firebase.js';
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MFC — Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
 
-  const emailEl = document.getElementById('email');
-  const passEl = document.getElementById('password');
-  const msg = document.getElementById('msg');
+<body>
+  <header class="header">
+    <div class="logo">MFC</div>
+    <div><a href="index.html" class="btn-ghost">Home</a></div>
+  </header>
 
-  // 🔹 Email login
-  document.getElementById('loginBtn').addEventListener('click', async () => {
-    msg.innerText = '';
-    try {
-      await emailLogin(emailEl.value.trim(), passEl.value);
-      window.location.href = 'dashboard.html';
-    } catch (e) {
-      msg.innerText = e.message;
-    }
-  });
+  <main>
+    <section class="card">
+      <div class="hero-card" style="padding:16px;margin:-24px 0 12px;border-radius:12px">
+        <h2 style="margin:0">Login to MFC</h2>
+        <p style="margin:6px 0 0">Use email & password, or sign in with Google</p>
+      </div>
 
-  // 🔹 Google login
-  document.getElementById('googleBtn').addEventListener('click', async () => {
-    msg.innerText = '';
-    try {
-      await googleSignIn();
-      window.location.href = 'dashboard.html';
-    } catch (e) {
-      msg.innerText = e.message;
-    }
-  });
+      <div id="msg" style="color:#d33;margin-bottom:8px"></div>
 
-  // 🔹 Forgot password
-  document.getElementById('forgotBtn').addEventListener('click', async () => {
-    const email = prompt('Enter your email for password reset:');
-    if (!email) return;
-    try {
-      await forgotPassword(email);
-      alert('Reset email sent!');
-    } catch (e) {
-      alert(e.message);
-    }
-  });
+      <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+      </div>
 
-  // 🔹 Register new account
-  document.getElementById('registerLink').addEventListener('click', async (ev) => {
-    ev.preventDefault();
-    const email = emailEl.value.trim();
-    const pass = passEl.value;
-    if (!email || !pass) return alert('Enter email & password');
-    try {
-      await registerEmail(email, pass);
-      alert('Registered successfully!');
-      window.location.href = 'dashboard.html';
-    } catch (e) {
-      alert(e.message);
-    }
-  });
+      <div class="form-group">
+        <label>Password</label>
+        <input id="password" type="password" />
+      </div>
 
-  // 🚫 Prevent redirect loop
-  onAuth((user) => {
-    const path = window.location.pathname;
-    if (user && path.endsWith('login.html')) {
-      // already logged in, go to dashboard
-      window.location.replace('dashboard.html');
-    }
-  });
-</script>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="loginBtn" class="btn-primary">Login</button>
+        <button id="googleBtn" class="btn-ghost">Sign in with Google</button>
+        <button id="forgotBtn" class="btn-ghost">Forgot?</button>
+      </div>
+
+      <hr style="margin:12px 0" />
+      <div style="text-align:center">
+        <small>Don't have an account?</small>
+        <a href="#" id="registerLink"> Register</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ Place script AFTER the body (not inside head) -->
+  <script type="module">
+    import { emailLogin, googleSignIn, registerEmail, forgotPassword, onAuth } from './js/auth.js';
+    import { auth } from './js/firebase.js';
+
+    const emailEl = document.getElementById('email');
+    const passEl = document.getElementById('password');
+    const msg = document.getElementById('msg');
+
+    // 🔹 Email login
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      msg.innerText = '';
+      try {
+        await emailLogin(emailEl.value.trim(), passEl.value);
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        msg.innerText = e.message;
+      }
+    });
+
+    // 🔹 Google login
+    document.getElementById('googleBtn').addEventListener('click', async () => {
+      msg.innerText = '';
+      try {
+        await googleSignIn();
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        msg.innerText = e.message;
+      }
+    });
+
+    // 🔹 Forgot password
+    document.getElementById('forgotBtn').addEventListener('click', async () => {
+      const email = prompt('Enter your email for password reset:');
+      if (!email) return;
+      try {
+        await forgotPassword(email);
+        alert('Reset email sent!');
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+
+    // 🔹 Register new account
+    document.getElementById('registerLink').addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const email = emailEl.value.trim();
+      const pass = passEl.value;
+      if (!email || !pass) return alert('Enter email & password');
+      try {
+        await registerEmail(email, pass);
+        alert('Registered successfully!');
+        window.location.href = 'dashboard.html';
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+
+    // 🚫 Prevent redirect loop
+    onAuth((user) => {
+      const path = window.location.pathname;
+      if (user && path.endsWith('login.html')) {
+        window.location.replace('dashboard.html');
+      }
+    });
+  </script>
+</body>
+</html>
