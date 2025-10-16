@@ -35,30 +35,29 @@
         <div style="margin-top:12px">
           <button id="uploadBtn" class="btn-primary">Upload</button>
           <div id="progress" class="progress"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+   <script type="module">
+  import { onAuth } from './js/auth.js';
+  import { initUploadForm } from './js/upload.js';
 
-  <script type="module">
-    import { onAuth } from './js/auth.js';
-    import { initUploadForm } from './js/upload.js';
+  // ✅ Ensure only logged-in users can upload
+  onAuth(user => {
+    if (!user) {
+      window.location.replace('login.html');
+      return;
+    }
+  });
 
-    onAuth(user => {
-      if (!user) window.location.href = 'login.html';
-    });
+  const fileInput = document.getElementById('fileInput');
+  const titleEl = document.getElementById('title');
+  const descEl = document.getElementById('desc');
+  const catEl = document.getElementById('category');
+  const progressEl = document.getElementById('progress');
+  const uploadBtn = document.getElementById('uploadBtn');
 
-    const fileInput = document.getElementById('fileInput');
-    const titleEl = document.getElementById('title');
-    const descEl = document.getElementById('desc');
-    const catEl = document.getElementById('category');
-    const progressEl = document.getElementById('progress');
-    const uploadBtn = document.getElementById('uploadBtn');
-
-    initUploadForm(fileInput, titleEl, descEl, catEl, progressEl, uploadBtn, () => {
-      alert('Upload saved to feed!');
-      window.location.href = 'index.html';
-    });
-  </script>
+  initUploadForm(fileInput, titleEl, descEl, catEl, progressEl, uploadBtn, () => {
+    alert('Upload saved to feed!');
+    window.location.href = 'dashboard.html';
+  });
+   </script>
 </body>
 </html>
