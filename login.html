@@ -102,6 +102,46 @@
     onAuth(user => {
       if (user) window.location.href = 'dashboard.html';
     });
-  </script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR-API-KEY",
+    authDomain: "YOUR-AUTH-DOMAIN",
+    projectId: "YOUR-PROJECT-ID",
+    storageBucket: "YOUR-STORAGE-BUCKET",
+    messagingSenderId: "YOUR-MESSAGE-ID",
+    appId: "YOUR-APP-ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // ✅ Check if already logged in
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Redirect ONLY ONCE if user already logged in
+      if (window.location.pathname.includes("login.html")) {
+        window.location.replace("dashboard.html");
+      }
+    }
+  });
+
+  // 🧠 Login button click
+  document.getElementById("loginBtn").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // ✅ After login, go to dashboard once only
+      window.location.replace("dashboard.html");
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+</script>
 </body>
 </html>
