@@ -6,59 +6,60 @@
   const passEl = document.getElementById('password');
   const msg = document.getElementById('msg');
 
-  // 🔐 Email login
+  // Email login
   document.getElementById('loginBtn').addEventListener('click', async () => {
     msg.innerText = '';
     try {
       await emailLogin(emailEl.value.trim(), passEl.value);
-      window.location.replace('dashboard.html'); // ✅ safe redirect
+      window.location.href = 'dashboard.html';
     } catch (e) {
-      msg.innerText = 'Firebase: ' + (e.message || e.code);
+      msg.innerText = e.message;
     }
   });
 
-  // 🔑 Google login
+  // Google login
   document.getElementById('googleBtn').addEventListener('click', async () => {
     msg.innerText = '';
     try {
       await googleSignIn();
-      window.location.replace('dashboard.html'); // ✅ safe redirect
+      window.location.href = 'dashboard.html';
     } catch (e) {
-      msg.innerText = 'Google sign-in failed: ' + (e.message || e.code);
+      msg.innerText = e.message;
     }
   });
 
-  // 🔁 Forgot password
+  // Forgot password
   document.getElementById('forgotBtn').addEventListener('click', async () => {
-    const email = prompt('Enter your account email for password reset:');
+    const email = prompt('Enter your email for password reset:');
     if (!email) return;
     try {
       await forgotPassword(email);
-      alert('Password reset email sent (check spam).');
+      alert('Reset email sent!');
     } catch (e) {
-      alert('Error: ' + (e.message || e.code));
+      alert(e.message);
     }
   });
 
-  // 🧍 Register new user
+  // Register new account
   document.getElementById('registerLink').addEventListener('click', async (ev) => {
     ev.preventDefault();
     const email = emailEl.value.trim();
     const pass = passEl.value;
-    if (!email || !pass) { alert('Enter email and password to register'); return; }
+    if (!email || !pass) return alert('Enter email & password');
     try {
       await registerEmail(email, pass);
-      alert('Registered — welcome!');
-      window.location.replace('dashboard.html'); // ✅ direct redirect
+      alert('Registered successfully!');
+      window.location.href = 'dashboard.html';
     } catch (e) {
-      alert('Register error: ' + (e.message || e.code));
+      alert(e.message);
     }
   });
 
-  // 🚀 FIX: Redirect only from login page (not upload/profile)
-  onAuth(user => {
+  // 🚫 Prevent loop — Only redirect if on login page
+  onAuth((user) => {
     const current = window.location.pathname;
-    if (user && current.includes('login.html')) {
+    if (user && current.endsWith('login.html')) {
+      // user already logged in → move to dashboard
       window.location.replace('dashboard.html');
     }
   });
