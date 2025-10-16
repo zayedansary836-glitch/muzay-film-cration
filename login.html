@@ -6,7 +6,7 @@
   const passEl = document.getElementById('password');
   const msg = document.getElementById('msg');
 
-  // Email login
+  // 🔹 Email login
   document.getElementById('loginBtn').addEventListener('click', async () => {
     msg.innerText = '';
     try {
@@ -17,7 +17,7 @@
     }
   });
 
-  // Google login
+  // 🔹 Google login
   document.getElementById('googleBtn').addEventListener('click', async () => {
     msg.innerText = '';
     try {
@@ -28,7 +28,7 @@
     }
   });
 
-  // Forgot password
+  // 🔹 Forgot password
   document.getElementById('forgotBtn').addEventListener('click', async () => {
     const email = prompt('Enter your email for password reset:');
     if (!email) return;
@@ -40,7 +40,7 @@
     }
   });
 
-  // Register new account
+  // 🔹 Register new account
   document.getElementById('registerLink').addEventListener('click', async (ev) => {
     ev.preventDefault();
     const email = emailEl.value.trim();
@@ -55,11 +55,11 @@
     }
   });
 
-  // 🚫 Prevent loop — Only redirect if on login page
+  // 🚫 Prevent redirect loop
   onAuth((user) => {
-    const current = window.location.pathname;
-    if (user && current.endsWith('login.html')) {
-      // user already logged in → move to dashboard
+    const path = window.location.pathname;
+    if (user && path.endsWith('login.html')) {
+      // already logged in, go to dashboard
       window.location.replace('dashboard.html');
     }
   });
