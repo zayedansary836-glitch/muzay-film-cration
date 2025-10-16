@@ -11,7 +11,6 @@
       background-color: #f8f9fa;
       color: #333;
     }
-
     header {
       background-color: #ff6b00;
       color: white;
@@ -20,61 +19,15 @@
       align-items: center;
       justify-content: space-between;
     }
-
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 15px;
-      font-weight: 500;
-    }
-
-    .dashboard {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      transition: 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card h2 {
-      color: #ff6b00;
-      margin-bottom: 10px;
-    }
-
-    .logout-btn {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
-    .logout-btn:hover {
-      background: #555;
-    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: 500; }
+    .dashboard { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .card { background-color: white; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); padding: 20px; transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); }
+    .card h2 { color: #ff6b00; margin-bottom: 10px; }
+    .logout-btn { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+    .logout-btn:hover { background: #555; }
   </style>
 </head>
 <body>
@@ -112,7 +65,6 @@
   </div>
 
   <script type="module">
-    // 🔥 Firebase Config (replace with your actual project config)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -130,81 +82,40 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 🧠 Check if user logged in
+    // ✅ Safe login state check (no redirect loop)
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            document.getElementById("userName").textContent = data.name || "User";
-            document.getElementById("roleType").textContent = data.role || "Creator";
-          } else {
-            document.getElementById("userName").textContent = user.email;
-            document.getElementById("roleType").textContent = "Standard User";
-          }
-
-          // Demo static data (replace later with Firestore counts)
-          document.getElementById("uploadCount").textContent = "4 Uploaded";
-          document.getElementById("viewsCount").textContent = "250 Views";
-          document.getElementById("msgCount").textContent = "2 New Messages";
-        } catch (err) {
-          console.error("Firestore error:", err);
+      if (!user) {
+        if (window.location.pathname.includes('dashboard.html')) {
+          window.location.replace('login.html');
         }
-      } else {
-        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          document.getElementById("userName").textContent = data.name || "User";
+          document.getElementById("roleType").textContent = data.role || "Creator";
+        } else {
+          document.getElementById("userName").textContent = user.email;
+          document.getElementById("roleType").textContent = "Standard User";
+        }
+
+        document.getElementById("uploadCount").textContent = "4 Uploaded";
+        document.getElementById("viewsCount").textContent = "250 Views";
+        document.getElementById("msgCount").textContent = "2 New Messages";
+      } catch (err) {
+        console.error("Firestore error:", err);
       }
     });
 
-    // 🚪 Logout
+    // 🚪 Logout button
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
-        window.location.href = "login.html";
-      }).catch((error) => {
-        console.error("Logout error:", error);
-      });
-    });
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "YOUR-API-KEY",
-    authDomain: "YOUR-AUTH-DOMAIN",
-    projectId: "YOUR-PROJECT-ID",
-    storageBucket: "YOUR-STORAGE-BUCKET",
-    messagingSenderId: "YOUR-MESSAGE-ID",
-    appId: "YOUR-APP-ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // ✅ Check login state safely
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      // Redirect ONLY IF not logged in
-      if (window.location.pathname.includes("dashboard.html")) {
         window.location.replace("login.html");
-      }
-    } else {
-      // Show user data
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      document.getElementById("userName").textContent = userDoc.exists()
-        ? userDoc.data().name
-        : user.email;
-      document.getElementById("roleType").textContent = userDoc.exists()
-        ? userDoc.data().role
-        : "Creator";
-    }
-  });
-
-  // 🚪 Logout
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    signOut(auth).then(() => window.location.replace("login.html"));
-  });
+      }).catch((error) => console.error("Logout error:", error));
+    });
   </script>
 </body>
 </html>
