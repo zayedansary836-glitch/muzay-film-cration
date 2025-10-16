@@ -164,6 +164,47 @@
         console.error("Logout error:", error);
       });
     });
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR-API-KEY",
+    authDomain: "YOUR-AUTH-DOMAIN",
+    projectId: "YOUR-PROJECT-ID",
+    storageBucket: "YOUR-STORAGE-BUCKET",
+    messagingSenderId: "YOUR-MESSAGE-ID",
+    appId: "YOUR-APP-ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // ✅ Check login state safely
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // Redirect ONLY IF not logged in
+      if (window.location.pathname.includes("dashboard.html")) {
+        window.location.replace("login.html");
+      }
+    } else {
+      // Show user data
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      document.getElementById("userName").textContent = userDoc.exists()
+        ? userDoc.data().name
+        : user.email;
+      document.getElementById("roleType").textContent = userDoc.exists()
+        ? userDoc.data().role
+        : "Creator";
+    }
+  });
+
+  // 🚪 Logout
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => window.location.replace("login.html"));
+  });
   </script>
 </body>
 </html>
